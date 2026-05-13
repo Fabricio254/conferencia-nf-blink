@@ -13,11 +13,19 @@ from datetime import datetime, timedelta
 # ═════════════════════════════════════════════════════════════════════════════
 
 # Ler configurações do Streamlit secrets
-API_URL = st.secrets.get("api_url", "http://localhost:8000")
-API_TOKEN = st.secrets.get("api_token", "seu_token_aqui")
+try:
+    if "api" in st.secrets:
+        API_URL = st.secrets["api"]["url"]
+        API_TOKEN = st.secrets["api"]["token"]
+    else:
+        API_URL = st.secrets.get("api_url", None)
+        API_TOKEN = st.secrets.get("api_token", None)
+except Exception:
+    API_URL = None
+    API_TOKEN = None
 
 # Headers de autenticação
-HEADERS = {"Authorization": f"Bearer {API_TOKEN}"}
+HEADERS = {"Authorization": f"Bearer {API_TOKEN}"} if API_TOKEN else {}
 
 # ═════════════════════════════════════════════════════════════════════════════
 # FUNÇÕES DE CLIENTE API
@@ -114,6 +122,32 @@ st.set_page_config(
 st.title("📋 Conferência de Notas Fiscais — Via API")
 st.markdown("**Acessando Firebird através da API FastAPI**")
 
+# ─── VERIFICAR SECRETS ─────────────────────────────────────────────────────────
+if not API_URL or not API_TOKEN:
+    st.error("⚠️ **Secrets não configurados!**")
+    st.warning("""
+### Para configurar:
+
+1. Acesse: **https://share.streamlit.io/**
+2. Clique na app `conferencia-nf-blink`
+3. Vá em Settings (⚙️) → **Secrets**
+4. Cole o seguinte (formato TOML):
+
+```toml
+[api]
+url = "https://conferencia-nf-blink.ngrok-free.dev"
+token = "seu_token_super_secreto_aqui"
+```
+
+5. Clique "Save"
+6. Recarregue a página (F5)
+
+**ANTES de fazer deploy, você PRECISA:**
+- Iniciar a API localmente: `Iniciar_API_com_ngrok.bat`
+- Isso expõe a API com ngrok e gera a URL pública
+    """)
+    st.stop()
+
 # Health Check
 with st.spinner("Verificando conexão com API..."):
     health = health_check()
@@ -122,7 +156,13 @@ if health and health.get("status") == "OK":
     st.success(f"✅ {health['message']}")
 else:
     st.error(f"❌ Não foi possível conectar à API em {API_URL}")
-    st.info(f"Certifique-se de que a API está rodando e o token está correto.")
+    st.info("""
+**Verifique:**
+- ✓ A API está rodando (`Iniciar_API_com_ngrok.bat`)
+- ✓ ngrok está gerando a URL pública
+- ✓ O token está correto nos secrets
+- ✓ A URL da API está acessível (teste em: https://share.streamlit.io/fabricio254/conferencia-nf-blink)
+    """)
     st.stop()
 
 # ─────────────────────────────────────────────────────────────────────────────
