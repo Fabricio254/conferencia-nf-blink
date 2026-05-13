@@ -1,0 +1,82 @@
+# Sensíveis - Credenciais e Certificados
+db_config.json
+cert_config.json
+email_config.json
+login_config.json
+*.pfx
+*.p12
+
+# Banco de Dados
+*.fdb
+*.ib
+*.fbk
+
+# Cache e Temporários
+__pycache__/
+*.py[cod]
+*$py.class
+.streamlit/
+.cache/
+cache/
+*.json.bak
+*.json.migrado
+xml_cache.json
+
+# Logs
+*.log
+streamlit_errors.log
+monitor_nfe.log
+
+# Arquivos gerados
+*.xlsx
+*.zip
+*.html
+*.csv
+
+# Backup
+_backup/
+_fix_*.py
+_diag*.py
+_test*.py
+_show*.py
+_check*.py
+
+# Outros arquivos app
+app_test.py
+app_limpo.py
+app_simple.py
+conferencia_nf.py
+test_*.py
+
+# Pastas de certificados
+framodas*/
+Mad\ athos/
+Santel*/
+Valnetti*/
+bermatos\ */
+keppy\ */
+palumila\ */
+
+# Ambiente virtual
+venv/
+.env
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema
+Thumbs.db
+.DS_Store
+
+# Processamento
+manifestacoes.json
+nsu_config.json
+chaves_faltando_xml.txt
+_registrar_monitor.ps1
+
+# Pasta de uploads
+uploads/
