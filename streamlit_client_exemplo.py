@@ -24,8 +24,15 @@ except Exception:
     API_URL = None
     API_TOKEN = None
 
-# Headers de autenticação
-HEADERS = {"Authorization": f"Bearer {API_TOKEN}"} if API_TOKEN else {}
+# Headers de autenticação (inclui ngrok-skip-browser-warning para bypassar tela de aviso)
+HEADERS = {
+    "Authorization": f"Bearer {API_TOKEN}",
+    "ngrok-skip-browser-warning": "true",
+    "User-Agent": "StreamlitClient/1.0",
+} if API_TOKEN else {
+    "ngrok-skip-browser-warning": "true",
+    "User-Agent": "StreamlitClient/1.0",
+}
 
 # ═════════════════════════════════════════════════════════════════════════════
 # FUNÇÕES DE CLIENTE API
@@ -35,7 +42,11 @@ HEADERS = {"Authorization": f"Bearer {API_TOKEN}"} if API_TOKEN else {}
 def health_check():
     """Verifica se a API está disponível."""
     try:
-        response = requests.get(f"{API_URL}/api/health", timeout=5)
+        response = requests.get(
+            f"{API_URL}/api/health",
+            headers={"ngrok-skip-browser-warning": "true", "User-Agent": "StreamlitClient/1.0"},
+            timeout=10,
+        )
         response.raise_for_status()
         return response.json()
     except Exception as e:
